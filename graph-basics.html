@@ -53,14 +53,15 @@ class="math inline"><em>v</em></span> não-visitado (fronteira):
 <li>Marcar <span class="math inline"><em>v</em></span> visitado</li>
 </ul></li>
 </ul>
+<strong>
 <p class="claim">
 Ao fim do algoritmo, <span class="math inline"><em>v</em></span> está
 marcado visitado se e só se existe um caminho <span
 class="math inline"><em>s</em> → <em>v</em></span>
 </p>
-<p>Prova: (<span class="math inline">⇒</span>) (invariante de loop): Um
-resultado mais forte que vamos mostrar é que essa condição não é
-satisfeita apenas ao término do algoritmo, mas é, de fato, uma
+<p></strong> Prova: (<span class="math inline">⇒</span>) (invariante de
+loop): Um resultado mais forte que vamos mostrar é que essa condição não
+é satisfeita apenas ao término do algoritmo, mas é, de fato, uma
 invariante de loop: <strong>ao final de cada iteração, o conjunto de
 vértices marcados visitados é um subconjunto daqueles alcançáveis a
 partir de</strong> <span class="math inline"><em>s</em></span>.</p>
@@ -131,7 +132,7 @@ implementações específicas, como BFS (Breadth-First-Search) e DFS
 (Depth-First-Search).</p>
 <h2 id="breadth-first-search">Breadth first Search</h2>
 <p>Visita o grafo por camadas. Podemos definir as camadas de um grafo
-<strong>não direcionado</strong> em referência a um vértice <span
+(<strong>direcionado ou não</strong>) em referência a um vértice <span
 class="math inline"><em>s</em></span> recursivamente por:</p>
 <ul>
 <li>A camada <span class="math inline">0</span> contém apenas o vértice
@@ -140,7 +141,10 @@ class="math inline"><em>s</em></span> recursivamente por:</p>
 todos os vértices que
 <ul>
 <li>São adjacentes a um vértice de camada <span
-class="math inline"><em>n</em></span></li>
+class="math inline"><em>n</em></span>: isto é, existe <span
+class="math inline"><em>u</em></span> na camada <span
+class="math inline"><em>n</em></span> tal que existe a aresta <span
+class="math inline">(<em>u</em>,<em>v</em>)</span>.</li>
 <li>Não estão na camada <span class="math inline"><em>k</em></span> para
 nenhum <span class="math inline">0 ≤ <em>k</em> ≤ <em>n</em></span></li>
 </ul></li>
@@ -154,14 +158,15 @@ class="math inline"><em>s</em></span>, pondo <span
 class="math inline">∞</span> se não há tal camada, isto é, se <span
 class="math inline"><em>v</em></span> não está conectado, por algum
 caminho, a <span class="math inline"><em>s</em></span>.</p>
+<strong>
 <p class="claim">
 O caminho mais curto de <span class="math inline"><em>s</em></span> a
 <span class="math inline"><em>v</em></span> possui comprimento <span
-class="math inline"><em>n</em> + 1</span> (incluindo ambos no caminho)
+class="math inline"><em>n</em> + 1</span> (incluindo ambos os extremos)
 se e só se <span class="math inline"><em>v</em></span> está na camada
 <span class="math inline"><em>n</em></span>
 </p>
-<p>Prova: Note que, se <span
+<p></strong> Prova: Note que, se <span
 class="math inline"><em>d</em><sub><em>s</em></sub>(<em>u</em>) = <em>x</em></span>,
 e <span class="math inline">(<em>u</em>,<em>u</em>′)</span> está no
 grafo, então <span
@@ -225,3 +230,67 @@ e à hipótese indutiva. Concluímos <span
 class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>k</em></sub>) = <em>d</em><sub><em>s</em></sub>(<em>v</em>) ≤ <em>k</em> &lt; <em>n</em> + 1</span>
 contradição. Em outras palavras, o caminho de tamanho <span
 class="math inline"><em>n</em> + 1</span> encontrado acima é mínimo.</p>
+<h3 id="implementação-da-bfs">Implementação da BFS</h3>
+<pre><code>BFS(graph G, start vertex s)
+    visited[s] = true
+    q = empty queue
+    insert s in q
+    while q is not empty:
+        remove front node of q and call it v
+        for each edge(v, w)
+            if visited[w] is false:
+                visited[w] = true
+                insert w in q</code></pre>
+<h3 id="corretude">Corretude</h3>
+<strong>
+<p class="claim">
+(Invariante de loop) Em cada iteração, todo vértice em <span
+class="math inline"><em>q</em></span> já foi visitado
+</p>
+<p></strong> Prova:</p>
+<ul>
+<li>Inicialização: <span class="math inline"><em>q</em></span> possui
+apenas o vértice <span class="math inline"><em>s</em></span> quando
+criada, e esse vértice já foi marcado como visitado no início do
+código.</li>
+<li>Manutenção: elementos são adicionados na fila apenas na linha
+“insert w in q”, a qual é precedida por marcar <span
+class="math inline"><em>w</em></span> como visitado. A invariante,
+portanto, segue.</li>
+</ul>
+<strong>
+<p class="claim">
+Ao final do algoritmo, um vértice foi visitado se e só se existe um
+caminho partindo de <span class="math inline"><em>s</em></span> até ele
+</p>
+<p></strong> Prova: devido à afirmação anterior, e ao <code>if</code>
+statment</p>
+<p><code>ìf visited[w] is false: ...</code></p>
+<p>toda aresta <span class="math inline">(<em>v</em>,<em>w</em>)</span>
+de fato percorrida pelo algoritmo satisfaz <span
+class="math inline"><em>v</em><em>i</em><em>s</em><em>i</em><em>t</em><em>e</em><em>d</em>[<em>v</em>] = <em>t</em><em>r</em><em>u</em><em>e</em></span>
+e <span
+class="math inline"><em>v</em><em>i</em><em>s</em><em>i</em><em>t</em><em>e</em><em>d</em>[<em>w</em>] = <em>f</em><em>a</em><em>l</em><em>s</em><em>e</em></span>.
+Portanto, é um caso especial do modelo genérico da seção anterior, que
+já foi provado.</p>
+<h3 id="complexidade">Complexidade</h3>
+<strong>
+<p class="claim">
+A complexidade da implementação acima do algoritmo de
+Breadth-First-Search é <span
+class="math inline"><em>O</em>(|<em>V</em>|+|<em>E</em>|)</span>, onde
+<span class="math inline">|<em>V</em>|</span> é a quantidade de vértices
+e <span class="math inline">|<em>E</em>|</span> a quantidade de arestas
+do grafo.
+</p>
+<p></strong></p>
+<h3 id="característica-de-busca-em-largura">Característica de busca em
+largura</h3>
+<strong>
+<p class="claim">
+Se <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>u</em>) &lt; <em>d</em><sub><em>s</em></sub>(<em>v</em>) &lt; ∞</span>
+então <span class="math inline"><em>u</em></span> foi marcado como
+visitado antes de <span class="math inline"><em>v</em></span>.
+</p>
+<p></strong></p>

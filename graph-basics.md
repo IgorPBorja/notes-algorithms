@@ -43,7 +43,7 @@ Ideal: não olhar nenhum elemento mais do que um número limitado de vezes (isto
 	* Escolha uma aresta $(u,v)$ com $u$ visitado e $v$ não-visitado (fronteira): **se não existirem, termine execução**.
 	* Marcar $v$ visitado
 
-<p class="claim"> Ao fim do algoritmo, $v$ está marcado visitado se e só se existe um caminho $s \to v$ </p>
+<strong> <p class="claim"> Ao fim do algoritmo, $v$ está marcado visitado se e só se existe um caminho $s \to v$ </p> </strong>
 Prova: 
 ($\Rightarrow$) (invariante de loop): Um resultado mais forte que vamos mostrar é que essa condição não é satisfeita apenas ao término do algoritmo, mas é, de fato, uma invariante de loop: **ao final de cada iteração, o conjunto de vértices marcados visitados é um subconjunto daqueles alcançáveis a partir de** $s$.
 
@@ -63,16 +63,16 @@ Entretanto, o problema reside na linha:
 Como escolher essa aresta de forma eficiente? Daí, surgem as implementações específicas, como BFS (Breadth-First-Search) e DFS (Depth-First-Search). 
 
 ## Breadth first Search 
-Visita o grafo por camadas. Podemos definir as camadas de um grafo **não direcionado** em referência a um vértice $s$ recursivamente por:
+Visita o grafo por camadas. Podemos definir as camadas de um grafo (**direcionado ou não**) em referência a um vértice $s$ recursivamente por:
 
 * A camada $0$ contém apenas o vértice $s$
 * A camada $n+1$ contém todos os vértices que
-	* São adjacentes a um vértice de camada $n$
+	* São adjacentes a um vértice de camada $n$: isto é, existe $u$ na camada $n$ tal que existe a aresta $(u, v)$.
 	* Não estão na camada $k$ para nenhum $0 \leq k \leq n$
 
 Note uma correspondência direta entre essas camadas e os caminhos mais curto a partir da fonte $s$. De fato, denote por $d_s(v)$ a camada na qual se localiza o vértice $s$, pondo $\infty$ se não há tal camada, isto é, se $v$ não está conectado, por algum caminho, a $s$. 
 
-<p class="claim"> O caminho mais curto de $s$ a $v$ possui comprimento $n+1$ (incluindo ambos no caminho) se e só se $v$ está na camada $n$</p>
+<strong> <p class="claim"> O caminho mais curto de $s$ a $v$ possui comprimento $n+1$ (incluindo ambos os extremos) se e só se $v$ está na camada $n$</p> </strong>
 Prova: 
 Note que, se $d_s(u) = x$, e $(u, u')$ está no grafo, então $d_s(u') \leq x + 1$, com a igualdade se e só se $u'$ não está em nenhuma das camadas anteriores.
 
@@ -89,3 +89,40 @@ e portanto $s, b_{n-2}, \dotsc, b_1, v$ é um caminho de tamanho $n < n + 1$ de 
 Logo, temos que $d_s(a_n) = 0 \implies a_n = s$, e assim $s, a_{n-1}, \dotsc, a_1, v$ é um caminho de $s$ a $v$. 
 
 Por outro lado, suponha que existe um caminho mais curto $b_0 = s, b_1, \dotsc, b_{k-1}, b_{k} = v$ com $k < n + 1$. Então, como $d_s(b_1) = 1$, segue que (novamente por indução) $d_s(b_i) \leq i$, devido à aresta $(b_{i-1}, b_i)$ e à hipótese indutiva. Concluímos $d_s(b_k) = d_s(v) \leq k < n + 1$ contradição. Em outras palavras, o caminho de tamanho $n+1$ encontrado acima é mínimo.
+
+### Implementação da BFS
+```
+BFS(graph G, start vertex s)
+	visited[s] = true
+	q = empty queue
+	insert s in q
+	while q is not empty:
+		remove front node of q and call it v
+		for each edge(v, w)
+			if visited[w] is false:
+				visited[w] = true
+				insert w in q
+```
+
+### Corretude
+<strong> <p class="claim"> (Invariante de loop) Em cada iteração, todo vértice em $q$ já foi visitado </p> </strong>
+Prova: 
+
+* Inicialização: $q$ possui apenas o vértice $s$ quando criada, e esse vértice já foi marcado como visitado no início do código.
+* Manutenção: elementos são adicionados na fila apenas na linha "insert w in q", a qual é precedida por marcar $w$ como visitado. 
+A invariante, portanto, segue.
+
+<strong> <p class="claim"> Ao final do algoritmo, um vértice foi visitado se e só se existe um caminho partindo de $s$ até ele </p> </strong>
+Prova: devido à afirmação anterior, e ao ```if``` statment 
+
+```ìf visited[w] is false: ...```
+
+toda aresta $(v, w)$ de fato percorrida pelo algoritmo satisfaz $visited[v] = true$ e $visited[w] = false$. Portanto, é um caso especial do modelo genérico da seção anterior, que já foi provado.
+
+### Complexidade
+<strong> <p class="claim"> A complexidade da implementação acima do algoritmo de Breadth-First-Search é $O(|V| + |E|)$, onde $|V|$ é a quantidade de vértices e $|E|$ a quantidade de arestas do grafo. </p> </strong>
+
+### Característica de busca em largura
+<strong> <p class="claim"> Se $d_s(u) < d_s(v) < \infty$ então $u$ foi marcado como visitado antes de $v$. </p> </strong>
+
+
