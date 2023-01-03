@@ -1,0 +1,227 @@
+<style>
+body {
+<!-- Reset the counter named theorem each time a body obj is instantiated-->
+  counter-reset: theorem;
+  counter-reset: claim;
+}
+h1 {
+<!-- Reset the counter named theorem each time a h1 obj is instantiated-->
+  counter-reset: theorem;
+  counter-reset: claim;
+}
+
+p.theorem::before {
+  counter-increment: theorem; 
+  content: "Teorema " counter(theorem) " \2014 "; 
+}
+p.theorem[data-attribution]::before {
+  content: "Teorema " counter(theorem) " (" attr(data-attribution) ")  \2014 ";
+}
+
+p.claim::before {
+  counter-increment: claim; 
+  content: "Afirmação " counter(claim) " \2014 "; 
+}
+
+p.claim[data-attribution]::before {
+  content: "Afirmação " counter(claim) " (" attr(data-attribution) ")  \2014 ";
+}
+</style>
+<h1 id="generic-graph-search">Generic graph search</h1>
+<p>Entrada:</p>
+<ul>
+<li>Vértice inicial</li>
+<li>Grafo</li>
+</ul>
+<p>Ideal: não olhar nenhum elemento mais do que um número limitado de
+vezes (isto é, da ordem de <span
+class="math inline"><em>O</em>(|<em>V</em>|+|<em>E</em>|)</span> ou
+melhor).</p>
+<h2 id="algoritmo-ideia">Algoritmo (ideia)</h2>
+<ul>
+<li>Cada vértice deve estar associado a um booleano que indicará se já
+foi visitado.</li>
+<li>Marca-se o inicial, <span class="math inline"><em>s</em></span>,
+visitado.</li>
+<li>Enquanto possível:
+<ul>
+<li>Escolha uma aresta <span
+class="math inline">(<em>u</em>,<em>v</em>)</span> com <span
+class="math inline"><em>u</em></span> visitado e <span
+class="math inline"><em>v</em></span> não-visitado (fronteira):
+<strong>se não existirem, termine execução</strong>.</li>
+<li>Marcar <span class="math inline"><em>v</em></span> visitado</li>
+</ul></li>
+</ul>
+<p class="claim">
+Ao fim do algoritmo, <span class="math inline"><em>v</em></span> está
+marcado visitado se e só se existe um caminho <span
+class="math inline"><em>s</em> → <em>v</em></span>
+</p>
+<p>Prova: (<span class="math inline">⇒</span>) (invariante de loop): Um
+resultado mais forte que vamos mostrar é que essa condição não é
+satisfeita apenas ao término do algoritmo, mas é, de fato, uma
+invariante de loop: <strong>ao final de cada iteração, o conjunto de
+vértices marcados visitados é um subconjunto daqueles alcançáveis a
+partir de</strong> <span class="math inline"><em>s</em></span>.</p>
+<ul>
+<li><strong>Na inicialização</strong>De fato, vale trivialmente no
+início do algoritmo, pois apenas <span
+class="math inline"><em>s</em></span> foi visitado e existe um caminho
+de <span class="math inline"><em>s</em></span> a ele mesmo: o caminho
+vazio.</li>
+<li><strong>Manutenção</strong>: Suponha que vale para a <span
+class="math inline"><em>k</em></span>-ésima iteração, portanto. Então na
+<span class="math inline"><em>k</em> + 1</span>-ésima iteração
+selecionamos uma aresta <span
+class="math inline">(<em>u</em>,<em>v</em>) ∈ <em>G</em></span> com
+<span class="math inline"><em>u</em></span> visitado e <span
+class="math inline"><em>v</em></span> não. Como <span
+class="math inline"><em>u</em></span> foi marcado como visitado na <span
+class="math inline"><em>k</em></span>-ésima iteração ou antes, existe
+(por hipótese de indução) um caminho <span
+class="math inline"><em>s</em>, <em>a</em><sub>1</sub>, …, <em>a</em><sub><em>j</em></sub>, <em>u</em></span>
+da fonte <span class="math inline"><em>s</em></span> a esse vértice.
+Portanto, quando <span class="math inline"><em>v</em></span> é posto
+como visitado, a invariante de loop se mantém, pois existe o caminho
+<span
+class="math inline"><em>s</em>, <em>a</em><sub>1</sub>, …, <em>a</em><sub><em>j</em></sub>, <em>u</em>, <em>v</em></span>.<br />
+</li>
+<li>Portanto, ao término do algoritmo, a propriedade continua sendo
+válida.</li>
+</ul>
+<p>(<span class="math inline">⇐</span>) Demonstração por contradição:
+suponha que, após o término do algoritmo, existe <span
+class="math inline"><em>v</em></span> tal que <span
+class="math inline"><em>v</em></span> não foi visitado e existe caminho
+<span
+class="math inline"><em>a</em><sub>1</sub>, …, <em>a</em><sub><em>k</em></sub></span>
+de <span class="math inline"><em>s</em></span> a <span
+class="math inline"><em>v</em></span>, isto é, com <span
+class="math inline"><em>a</em><sub>1</sub> = <em>s</em>, <em>a</em><sub><em>k</em></sub> = <em>v</em></span>
+e <span
+class="math inline">(<em>a</em><sub><em>i</em></sub>,<em>a</em><sub><em>i</em> + 1</sub>) ∈ <em>G</em>, ∀1 ≤ <em>i</em> &lt; <em>k</em></span>.
+Como o subconjunto de índices dos vértices desse caminho (finito) que
+não foram visitados é não vazio (possui <span
+class="math inline"><em>k</em></span>), ele apresenta um menor elemento
+<span class="math inline"><em>j</em></span> (com <span
+class="math inline"><em>j</em> &gt; 1</span>, pois <span
+class="math inline"><em>a</em><sub>1</sub> = <em>s</em></span> foi
+visitado).</p>
+<p>Isto é, <span
+class="math inline"><em>a</em><sub><em>j</em> − 1</sub></span> foi
+visitado, <span
+class="math inline"><em>a</em><sub><em>j</em></sub></span> não foi e a
+aresta <span
+class="math inline">(<em>a</em><sub><em>j</em> − 1</sub>,<em>a</em><sub><em>j</em></sub>)</span>
+pertence a <span class="math inline"><em>G</em></span>. Porém isso é uma
+contradição, uma vez que o algoritmo não termina até não haverem mais
+arestas com o vértice de saída visitado e o de destino não-visitado.
+Isso finaliza a demonstração.</p>
+<h1 id="implementações-do-algoritmo-anterior">Implementações do
+algoritmo anterior</h1>
+<p>Entretanto, o problema reside na linha:</p>
+<p>“Escolha uma aresta <span
+class="math inline">(<em>u</em>,<em>v</em>)</span> com <span
+class="math inline"><em>u</em></span> visitado e <span
+class="math inline"><em>v</em></span> não-visitado (fronteira):
+<strong>se não existirem, termine execução</strong>.”</p>
+<p>Como escolher essa aresta de forma eficiente? Daí, surgem as
+implementações específicas, como BFS (Breadth-First-Search) e DFS
+(Depth-First-Search).</p>
+<h2 id="breadth-first-search">Breadth first Search</h2>
+<p>Visita o grafo por camadas. Podemos definir as camadas de um grafo
+<strong>não direcionado</strong> em referência a um vértice <span
+class="math inline"><em>s</em></span> recursivamente por:</p>
+<ul>
+<li>A camada <span class="math inline">0</span> contém apenas o vértice
+<span class="math inline"><em>s</em></span></li>
+<li>A camada <span class="math inline"><em>n</em> + 1</span> contém
+todos os vértices que
+<ul>
+<li>São adjacentes a um vértice de camada <span
+class="math inline"><em>n</em></span></li>
+<li>Não estão na camada <span class="math inline"><em>k</em></span> para
+nenhum <span class="math inline">0 ≤ <em>k</em> ≤ <em>n</em></span></li>
+</ul></li>
+</ul>
+<p>Note uma correspondência direta entre essas camadas e os caminhos
+mais curto a partir da fonte <span
+class="math inline"><em>s</em></span>. De fato, denote por <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>v</em>)</span> a
+camada na qual se localiza o vértice <span
+class="math inline"><em>s</em></span>, pondo <span
+class="math inline">∞</span> se não há tal camada, isto é, se <span
+class="math inline"><em>v</em></span> não está conectado, por algum
+caminho, a <span class="math inline"><em>s</em></span>.</p>
+<p class="claim">
+O caminho mais curto de <span class="math inline"><em>s</em></span> a
+<span class="math inline"><em>v</em></span> possui comprimento <span
+class="math inline"><em>n</em> + 1</span> (incluindo ambos no caminho)
+se e só se <span class="math inline"><em>v</em></span> está na camada
+<span class="math inline"><em>n</em></span>
+</p>
+<p>Prova: Note que, se <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>u</em>) = <em>x</em></span>,
+e <span class="math inline">(<em>u</em>,<em>u</em>′)</span> está no
+grafo, então <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>u</em>′) ≤ <em>x</em> + 1</span>,
+com a igualdade se e só se <span class="math inline"><em>u</em>′</span>
+não está em nenhuma das camadas anteriores.</p>
+<p>(<span class="math inline">⇒</span>) Seja <span
+class="math inline"><em>s</em>, <em>a</em><sub>1</sub>, …, <em>a</em><sub><em>n</em> − 1</sub>, <em>v</em></span>
+esse caminho mínimo. Então temos que <span
+class="math inline"><em>a</em><sub>1</sub></span> está na camada <span
+class="math inline">1</span>, e portanto <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>a</em><sub>2</sub>) ≤ 2</span>.
+Indutivamente segue que <span
+class="math inline"><em>a</em><sub><em>k</em></sub> ≤ <em>k</em></span>
+para todo $ 2 k n - 1$. Consequentemente, devido à aresta <span
+class="math inline">(<em>a</em><sub><em>n</em> − 1</sub>,<em>v</em>)</span>,
+<span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>v</em>) ≤ <em>d</em><sub><em>s</em></sub>(<em>a</em><sub><em>n</em> − 1</sub>) + 1 = <em>n</em></span>.</p>
+<p>Suponha por contradição que ocorre a desigualdade estrita. Então
+existe <span class="math inline"><em>b</em><sub>1</sub></span> com <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub>1</sub>) &lt; <em>n</em> − 1</span>.
+Indutivamente, segue que existe <span
+class="math inline"><em>b</em><sub><em>i</em></sub></span> com <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>i</em></sub>) &lt; <em>n</em> − <em>i</em></span>
+para todo <span
+class="math inline">1 ≤ <em>i</em> ≤ <em>n</em> − 1</span>. Logo</p>
+<p><span
+class="math display"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>n</em> − 1</sub>) &lt; 1 ⟹ <em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>n</em> − 1</sub>) = 0 ⟹ <em>b</em><sub><em>n</em> − 1</sub> = <em>s</em></span></p>
+<p>e portanto <span
+class="math inline"><em>s</em>, <em>b</em><sub><em>n</em> − 2</sub>, …, <em>b</em><sub>1</sub>, <em>v</em></span>
+é um caminho de tamanho <span
+class="math inline"><em>n</em> &lt; <em>n</em> + 1</span> de <span
+class="math inline"><em>s</em></span> até <span
+class="math inline"><em>v</em></span>, o que contradiz a minimalidade do
+caminho anterior apresentado.</p>
+<p>(<span class="math inline">⇐</span>) Suponha que <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>v</em>) = <em>n</em></span>.
+Então, indutivamente, existe <span
+class="math inline"><em>a</em><sub><em>i</em></sub></span> tal que <span
+class="math inline">(<em>a</em><sub><em>i</em></sub>,<em>a</em><sub><em>i</em> − 1</sub>)</span>
+pertence ao grafo e <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>a</em><sub><em>i</em></sub>) = <em>n</em> − <em>i</em></span>,
+com <span
+class="math inline"><em>a</em><sub>0</sub> := <em>v</em></span>.</p>
+<p>Logo, temos que <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>a</em><sub><em>n</em></sub>) = 0 ⟹ <em>a</em><sub><em>n</em></sub> = <em>s</em></span>,
+e assim <span
+class="math inline"><em>s</em>, <em>a</em><sub><em>n</em> − 1</sub>, …, <em>a</em><sub>1</sub>, <em>v</em></span>
+é um caminho de <span class="math inline"><em>s</em></span> a <span
+class="math inline"><em>v</em></span>.</p>
+<p>Por outro lado, suponha que existe um caminho mais curto <span
+class="math inline"><em>b</em><sub>0</sub> = <em>s</em>, <em>b</em><sub>1</sub>, …, <em>b</em><sub><em>k</em> − 1</sub>, <em>b</em><sub><em>k</em></sub> = <em>v</em></span>
+com <span class="math inline"><em>k</em> &lt; <em>n</em> + 1</span>.
+Então, como <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub>1</sub>) = 1</span>,
+segue que (novamente por indução) <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>i</em></sub>) ≤ <em>i</em></span>,
+devido à aresta <span
+class="math inline">(<em>b</em><sub><em>i</em> − 1</sub>,<em>b</em><sub><em>i</em></sub>)</span>
+e à hipótese indutiva. Concluímos <span
+class="math inline"><em>d</em><sub><em>s</em></sub>(<em>b</em><sub><em>k</em></sub>) = <em>d</em><sub><em>s</em></sub>(<em>v</em>) ≤ <em>k</em> &lt; <em>n</em> + 1</span>
+contradição. Em outras palavras, o caminho de tamanho <span
+class="math inline"><em>n</em> + 1</span> encontrado acima é mínimo.</p>
