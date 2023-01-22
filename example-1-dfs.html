@@ -1,0 +1,173 @@
+<style>
+body {
+<!-- Reset the counter named theorem each time a body obj is instantiated-->
+  counter-reset: theorem;
+  counter-reset: claim;
+}
+h1 {
+<!-- Reset the counter named theorem each time a h1 obj is instantiated-->
+  counter-reset: theorem;
+  counter-reset: claim;
+}
+
+p.theorem::before {
+  counter-increment: theorem; 
+  content: "Teorema " counter(theorem) " \2014 "; 
+}
+p.theorem[data-attribution]::before {
+  content: "Teorema " counter(theorem) " (" attr(data-attribution) ")  \2014 ";
+}
+
+p.claim::before {
+  counter-increment: claim; 
+  content: "Afirmação " counter(claim) " \2014 "; 
+}
+
+p.claim[data-attribution]::before {
+  content: "Afirmação " counter(claim) " (" attr(data-attribution) ")  \2014 ";
+}
+</style>
+<h1 id="problema">Problema</h1>
+<p>
+O problema em questão é o problema E do <em> AtCoder Begginer Contest
+284 </em>, disponível em
+<a>https://atcoder.jp/contests/abc284/tasks/abc284_e</a>.
+</p>
+<h1 id="código">Código</h1>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> paths <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> dfs<span class="op">(</span>vector<span class="op">&lt;</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;&amp;</span> adj<span class="op">,</span> <span class="dt">int</span> source<span class="op">,</span> <span class="dt">bool</span> visited<span class="op">[]){</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>paths <span class="op">&gt;=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span><span class="fl">1e6</span><span class="op">){</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    paths <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    visited<span class="op">[</span>source<span class="op">]</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> u<span class="op">:</span> adj<span class="op">[</span>source<span class="op">]){</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(!</span>visited<span class="op">[</span>u<span class="op">]){</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            dfs<span class="op">(</span>adj<span class="op">,</span> u<span class="op">,</span> visited<span class="op">);</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    visited<span class="op">[</span>source<span class="op">]</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span> <span class="co">// so it can be used again</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> n<span class="op">,</span> m<span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    cin <span class="op">&gt;&gt;</span> n <span class="op">&gt;&gt;</span> m<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bool</span> visited<span class="op">[</span>n<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="kw">false</span><span class="op">};</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    vector<span class="op">&lt;</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;</span> adj<span class="op">(</span>n<span class="op">);</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> u<span class="op">,</span> v<span class="op">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> m<span class="op">;</span> i<span class="op">++){</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        cin <span class="op">&gt;&gt;</span> u <span class="op">&gt;&gt;</span> v<span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">--</span>u<span class="op">;</span> <span class="op">--</span>v<span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        adj<span class="op">[</span>u<span class="op">].</span>emplace_back<span class="op">(</span>v<span class="op">);</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        adj<span class="op">[</span>v<span class="op">].</span>emplace_back<span class="op">(</span>u<span class="op">);</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    dfs<span class="op">(</span>adj<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> visited<span class="op">);</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> paths<span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h1 id="demonstração-corretude">Demonstração: corretude</h1>
+<p>Podemos facilmente reduzir para o seguinte pseudocódigo (considerando
+um grafo não direcionado):</p>
+<p>function dfs(u)</p>
+<blockquote>
+<p><span
+class="math inline"><em>p</em><em>a</em><em>t</em><em>h</em><em>s</em> ← <em>p</em><em>a</em><em>t</em><em>h</em><em>s</em> + 1</span></p>
+</blockquote>
+<blockquote>
+<p><span
+class="math inline"><em>v</em><em>i</em><em>s</em><em>i</em><em>t</em><em>e</em><em>d</em>[<em>u</em>] ← <em>t</em><em>r</em><em>u</em><em>e</em></span></p>
+</blockquote>
+<blockquote>
+<p>for <span class="math inline"><em>v</em></span> in the adjacency of
+<span class="math inline"><em>u</em></span></p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>if <span
+class="math inline"><em>v</em><em>i</em><em>s</em><em>i</em><em>t</em><em>e</em><em>d</em>[<em>v</em>] = <em>f</em><em>a</em><em>l</em><em>s</em><em>e</em></span></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>dfs(v)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><span
+class="math inline"><em>v</em><em>i</em><em>s</em><em>i</em><em>t</em><em>e</em><em>d</em>[<em>u</em>] ← <em>f</em><em>a</em><em>l</em><em>s</em><em>e</em></span></p>
+</blockquote>
+<p>dfs(s)</p>
+<strong>
+<p class="theorem">
+Cada caminho partindo de <span class="math inline"><em>s</em></span>
+para qualquer outro vértice, que não passe por um mesmo vértice duas
+vezes, é contado exatamente uma vez nesse algoritmo.
+</p>
+<p></strong></p>
+<p>Prova: note que um caminho desse tipo é uma sequência da forma <span
+class="math inline">(<em>s</em>,<em>a</em><sub>1</sub>,…,<em>a</em><sub><em>n</em></sub>)</span>
+onde <span
+class="math inline"><em>a</em><sub>1</sub>, …, <em>a</em><sub><em>n</em></sub> ∈ <em>V</em> \ {<em>s</em>}</span>
+são vértices distintos do subgrafo obtido removendo <span
+class="math inline"><em>s</em></span>, e <span
+class="math inline">(<em>a</em><sub><em>i</em></sub>,<em>a</em><sub><em>i</em> + 1</sub>) ∈ <em>E</em></span>
+(é uma aresta do grafo), <span
+class="math inline">∀0 ≤ <em>i</em> &lt; <em>n</em></span>. Note que foi
+considerado <span
+class="math inline"><em>a</em><sub>0</sub> = <em>s</em></span> (por
+conveniência).</p>
+<p>Seja <span
+class="math inline"><em>f</em>(<em>s</em>,<em>G</em>)</span> a
+quantidade desses caminhos no grafo <span
+class="math inline"><em>G</em></span>, e <span
+class="math inline"><em>G</em><sub><em>s</em></sub></span> o subgrafo
+induzido por retirar o vértice <span
+class="math inline"><em>s</em></span> e todas as suas arestas.
+Concluímos que cada uma dessas sequências <span
+class="math inline"><em>a</em><sub>1</sub>, …, <em>a</em><sub><em>n</em></sub></span>
+é um caminho possível em <span
+class="math inline"><em>G</em><sub><em>s</em></sub></span> que começa em
+um vértice na adjacência de <span class="math inline"><em>s</em></span>,
+e reciprocamente. Em outras palavras: <span
+class="math display"><em>f</em>(<em>s</em>,<em>G</em>) = ∑<sub>(<em>s</em>,<em>a</em>) ∈ <em>E</em></sub> <em>f</em>(<em>a</em>,<em>G</em><sub><em>s</em></sub>)</span></p>
+<p>Podemos provar agora o teorema por indução. O caso <span
+class="math inline">|<em>V</em>| = 1</span> é trivial, pois o algoritmo
+apenas incrementa <span
+class="math inline"><em>p</em><em>a</em><em>t</em><em>h</em><em>s</em></span>
+de <span class="math inline">0</span> para <span
+class="math inline">1</span> e termina sua execução, devido à lista de
+adjacência vazia.</p>
+<p>Suponha que o algoritmo vale para todo grafo com <span
+class="math inline"><em>m</em> ≤ <em>n</em><sub>0</sub></span> vértices,
+e que <span class="math inline"><em>G</em></span> é um grafo de <span
+class="math inline"><em>n</em><sub>0</sub> + 1</span> vértices. Então,
+como <span class="math inline"><em>s</em></span> foi marcado como
+visitado no início do algoritmo, nenhuma aresta com <span
+class="math inline"><em>s</em></span> como extremo será considerada, e
+portanto podemos tomar o loop interno como agindo sobre <span
+class="math inline"><em>G</em><sub><em>s</em></sub></span>.</p>
+<p>Porém, pela hipótese de indução, como <span
+class="math inline"><em>G</em><sub><em>s</em></sub></span> tem <span
+class="math inline"><em>n</em><sub>0</sub></span> vértices, temos que
+<span
+class="math inline"><em>d</em><em>f</em><em>s</em>(<em>v</em>)</span>
+incrementa <span
+class="math inline"><em>p</em><em>a</em><em>t</em><em>h</em><em>s</em></span>
+pela quantidade de caminhos de <span
+class="math inline"><em>G</em><sub><em>s</em></sub></span> que iniciam
+em <span class="math inline"><em>v</em></span> e não repetem vértices:
+que, por definição, é <span
+class="math inline"><em>f</em>(<em>v</em>,<em>G</em><sub><em>s</em></sub>)</span>.
+Portanto, como o loop ocorre sobre a adjacência de <span
+class="math inline"><em>s</em></span>, <span
+class="math inline"><em>p</em><em>a</em><em>t</em><em>h</em><em>s</em></span>
+é incrementado exatamente <span
+class="math inline">∑<sub>(<em>s</em>,<em>a</em>) ∈ <em>E</em></sub> <em>f</em>(<em>a</em>,<em>G</em><sub><em>s</em></sub>) = <em>f</em>(<em>s</em>,<em>G</em>)</span>
+vezes, como queríamos demonstrar.</p>
